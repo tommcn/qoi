@@ -52,7 +52,7 @@ pub fn parse_header(header: Vec<u8>) -> Header {
     return header;
 }
 
-pub fn validate_header(header: Header) -> bool {
+pub fn validate_header(header: Header) -> Header {
     if header.magic != "qoif" {
         panic!(
             "Header magic value is not equal to `qoif`, it is: {}",
@@ -71,5 +71,5 @@ pub fn validate_header(header: Header) -> bool {
             header.colorspace
         )
     }
-    return true;
+    return header;
 }

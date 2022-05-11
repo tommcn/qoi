@@ -80,7 +80,6 @@ pub fn parse_data(data: Vec<u8>, header: header::Header) -> Vec<Pixel> {
 
         byte = data[i]
     }
-    println!("Parsing OK");
     return decoded;
 }
 
@@ -98,7 +97,6 @@ pub fn save_image(header: header::Header, decoded: Vec<Pixel>) -> bool {
     let c: &[u8] = &data;
     image::save_buffer(&Path::new("img-gen.png"), c, w, h, image::ColorType::Rgba8)
         .expect("wrong data size");
-    println!("Saving OK");
     return true;
 }
 

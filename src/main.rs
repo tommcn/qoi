@@ -9,7 +9,10 @@ fn main() {
     let contents = fs::read(path).expect("Something went wrong reading the file");
     let header = header::parse_header(contents[..14].to_vec());
     header::validate_header(header.clone());
+    println!("Header OK");
     let rest = contents[14..].to_vec();
     let decoded = data::parse_data(rest, header.clone());
+    println!("Parsing OK");
     data::save_image(header, decoded);
+    println!("Saving OK");
 }

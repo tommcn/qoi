@@ -1,3 +1,4 @@
+#[derive(Clone, Debug, PartialEq)]
 pub struct Header {
     /**
      * Magic header, must equal "qoif"
@@ -49,6 +50,7 @@ pub fn parse_header(header: Vec<u8>) -> Header {
         channels,
         colorspace,
     };
+    println!("Header OK");
     return header;
 }
 

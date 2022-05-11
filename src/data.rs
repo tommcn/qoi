@@ -13,14 +13,14 @@ enum ChunkTypes {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-struct Pixel {
+pub struct Pixel {
     r: u8,
     g: u8,
     b: u8,
     a: u8,
 }
 
-pub fn parse_data(data: Vec<u8>, header: header::Header) {
+pub fn parse_data(data: Vec<u8>, header: header::Header) -> Vec<Pixel> {
     let mut decoded: Vec<Pixel> = Vec::with_capacity(64 as usize);
     let mut i = 0;
     let mut byte = data[i];
@@ -80,12 +80,11 @@ pub fn parse_data(data: Vec<u8>, header: header::Header) {
 
         byte = data[i]
     }
-    println!("Done parsing, saving...");
-    save_image(header, decoded);
-    println!("Saved");
+    println!("Parsing OK");
+    return decoded;
 }
 
-fn save_image(header: header::Header, decoded: Vec<Pixel>) -> bool {
+pub fn save_image(header: header::Header, decoded: Vec<Pixel>) -> bool {
     let h = header.height;
     let w = header.width;
     let mut data: Vec<u8> = vec![0; 0];
@@ -99,6 +98,7 @@ fn save_image(header: header::Header, decoded: Vec<Pixel>) -> bool {
     let c: &[u8] = &data;
     image::save_buffer(&Path::new("img-gen.png"), c, w, h, image::ColorType::Rgba8)
         .expect("wrong data size");
+    println!("Saving OK");
     return true;
 }
 
@@ -127,18 +127,14 @@ fn parse_qoi_op_index(data: u8, seen: Vec<Pixel>) -> Pixel {
 }
 
 fn parse_qoi_op_diff(data: u8, previous: Pixel) -> Pixel {
-    let dr: i16 = (((data as i16) & 0b00110000) >> 4) - 2;
-    let dg: i16 = (((data as i16) & 0b00001100) >> 2) - 2;
-    let db: i16 = (((data as i16) & 0b00000011) >> 0) - 2;
-
     let r = Wrapping((previous.r as u16) + (((data >> 4) & 0x03) as u16)) - Wrapping(2);
     let g = Wrapping((previous.g as u16) + (((data >> 2) & 0x03) as u16)) - Wrapping(2);
     let b = Wrapping((previous.b as u16) + (((data >> 0) & 0x03) as u16)) - Wrapping(2);
 
     return Pixel {
-        r: (r.0 % 255) as u8,
-        g: (g.0 % 255) as u8,
-        b: (b.0 % 255) as u8,
+        r: (r.0) as u8,
+        g: (g.0) as u8,
+        b: (b.0) as u8,
         a: (previous.a),
     };
 }

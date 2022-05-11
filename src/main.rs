@@ -4,7 +4,9 @@ mod data;
 mod header;
 
 fn main() {
-    let contents = fs::read("data/dice.qoi").expect("Something went wrong reading the file");
+    let path = "data/dice.qoi";
+    // let path = "data/wikipedia_008.qoi";
+    let contents = fs::read(path).expect("Something went wrong reading the file");
     let header = header::parse_header(contents[..14].to_vec());
     let header = header::validate_header(header);
     println!("Valid header");
